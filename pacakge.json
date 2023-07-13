@@ -1,0 +1,22 @@
+{
+    "name": "fraxlend-telegram-bot",
+    "version": "1.0.0",
+    "description": "Telegram bot for Alerting the Whale Tranasactions, Check Top Accounts and more",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [
+        "Telegram",
+        "bot",
+        "Frax",
+        "Frexlend"
+    ],
+    "author": "Sambit Sargam Ekalabya",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "node-fetch": "^3.3.1",
+        "node-telegram-bot-api": "^0.61.0"
+    }
+}
