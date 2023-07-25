@@ -3,14 +3,14 @@ const axios = require("axios");
 const cron = require('node-cron');
 
 // Replace 'YOUR_TELEGRAM_BOT_TOKEN' with your actual Telegram bot token
-const botToken = "";
+const botToken = "YOUR_TELEGRAM_BOT_TOKEN";
 const bot = new TelegramBot(botToken, {
   polling: true,
   parse_mode: 'MarkdownV2'
 });
 
-const firebaseUrl = 'https://';
-const fetchurl = 'https://';
+const firebaseUrl = '';
+const fetchurl = '';
 
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
@@ -39,6 +39,7 @@ bot.onText(/\/help/, (msg) => {
 /balance {wallet address} - Fetch the frax balance for a wallet address`
   );
 });
+
 
 bot.onText(/\/balance (.+)/, async (msg, match) => {
   const chatId = msg.chat.id;
@@ -70,10 +71,29 @@ bot.onText(/\/balance (.+)/, async (msg, match) => {
     const balanc = respons.data.result;
     const balan = balanc / 1e18;
 
+    const polyresponse = await axios.get(
+      `https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=0x45c32fA6DF82ead1e2EF74d17b76547EDdFaFF89&address=${walletAddress}&tag=latest&apikey=YXY6D6M6QRG8IKPFE8ND8IUNQ2C69YZDMS`
+    );
+    const polybalance = polyresponse.data.result;
+    const polybalanceInfrax = polybalance / 1e18;
+
+    const polyresponses = await axios.get(
+      `https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=0x1a3acf6D19267E2d3e7f898f42803e90C9219062&address=${walletAddress}&tag=latest&apikey=YXY6D6M6QRG8IKPFE8ND8IUNQ2C69YZDMS`
+    );
+    const polybalances = polyresponses.data.result;
+    const polybalanceInfraxs = polybalances / 1e18;
+
+    const polyrespons = await axios.get(
+      `https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=0xEe327F889d5947c1dc1934Bb208a1E792F953E96&address=${walletAddress}&tag=latest&apikey=YXY6D6M6QRG8IKPFE8ND8IUNQ2C69YZDMS`
+    );
+    const polybalanc = polyrespons.data.result;
+    const polybalan = polybalanc / 1e18;
+    
+
     bot
       .sendMessage(
         chatId,
-        `🔍 Wallet Address: ${walletAddress}\n\n💰 Balance: ${balanceInfrax} FRAX\n Frax Share Balance: ${balanceInfraxs} FXS \n Frax Price Index: ${balanceInfr} FPI \n Frax Ether Balance: ${balan} frxETH`
+        `🔍 Wallet Address: ${walletAddress}\n\n💰 Balance (in Ethereum): ${balanceInfrax} FRAX\n Frax Share Balance: ${balanceInfraxs} FXS \n Frax Price Index: ${balanceInfr} FPI \n Frax Ether Balance: ${balan} frxETH \n\n💰 Balance (in Polygon): ${polybalanceInfrax} FRAX\n Frax Share Balance: ${polybalanceInfraxs} FXS  \n Frax Ether Balance: ${polybalan} frxETH`
       )
       .then(() => {
         // Generate the etherscan.io tokenholdings link
@@ -115,6 +135,7 @@ bot.onText(/\/balance (.+)/, async (msg, match) => {
   }
 });
 
+
 // Handle the /whale command
 bot.onText(/\/whale/, (msg) => {
   const chatId = msg.chat.id;
@@ -139,7 +160,15 @@ bot.onText(/\/whale/, (msg) => {
 // Function to fetch top holders
 function fetchTopHolders(chatId, limit) {
   const options = {
-   
+    method: 'GET',
+    url: 'API.URL',
+    params: {
+      chain_id: '1',
+      contract_address: '0x853d955aCEf822Db058eb8505911ED77F175b99e',
+      page: '1',
+      limit: limit,
+    },
+    headers: { accept: 'application/json', 'x-api-key': 'API.KEY' },
   };
 
   axios
@@ -237,7 +266,16 @@ function fetchDataAndSendMessage() {
 
   const options = {
     method: 'GET',
-    
+    url: 'https://api.chainbase.online/v1/token/transfers',
+    params: {
+      chain_id: '1',
+      contract_address: '0x853d955aCEf822Db058eb8505911ED77F175b99e',
+      from_timestamp: fromTimestamp,
+      page: '1',
+      limit: '20',
+    },
+    headers: { accept: 'application/json', 'x-api-key': '2SX27k9KWUvVNgBhMnMh8iuwdma' },
+  };
   axios
   .request(options)
   .then(function (response) {
@@ -245,8 +283,7 @@ function fetchDataAndSendMessage() {
     // Check if the value is greater than 1000000
     if (transfers && transfers.length > 0) {
       transfers.forEach((transfer) => {
-        const valuee = transfer.value;
-        if (valuee > 9999000000000000000000) {
+        if (transfer.value > 9999000000000000000000) {
           sendAlertMessage(transfer);
         }
       });
