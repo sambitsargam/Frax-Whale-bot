@@ -34,6 +34,13 @@ The **Fraxlend Whale Tracker Bot** is a Telegram bot designed to provide users w
 ](https://t.me/fraxwhalebot)
 
 ## Demo Video
+
+
+https://github.com/sambitsargam/Frax-Whale-bot/assets/70655824/d8c2dc55-85df-4ee5-b221-cf66d0c7488c
+
+
+
+
 ![youtube](https://www.youtube.com/watch?v=3QK7n3oUii0&ab_channel=SambitSargamEkalabya)
 
 
